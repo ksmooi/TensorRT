@@ -1,0 +1,56 @@
+
+1. Generate the TensorRT-OSS build container.
+```shell
+dos2unix docker/build.sh && chmod 755 docker/build.sh
+
+./docker/build.sh --file docker/ubuntu-22.04.Dockerfile --tag tensorrt-ubuntu22.04-cuda12.5
+```
+
+---8<------8<------8<------8<------8<------8<------8<------8<------8<------8<------8<------8<------8<---
+
+2. Launch the TensorRT-OSS build container.
+
+NOTE:
+1. Use the --tag corresponding to build container generated in Step 1.
+2. NVIDIA Container Toolkit is required for GPU access (running TensorRT applications) inside the build container.
+3. sudo password for Ubuntu build containers is 'nvidia'.
+4. Specify port number using --jupyter <port> for launching Jupyter notebooks.
+
+```shell
+dos2unix docker/launch.sh && chmod 755 docker/launch.sh
+
+./docker/launch.sh --tag tensorrt-ubuntu22.04-cuda12.5 --gpus all
+```
+
+---8<------8<------8<------8<------8<------8<------8<------8<------8<------8<------8<------8<------8<---
+
+3. Building TensorRT-OSS (in docker-container)
+
+NOTE:
+1. Generate Makefiles and build (cuda-12.6.0, RTX-30xx, RTX-40xx)
+2. GPU arch list: https://developer.nvidia.com/cuda-gpus
+3. sudo password for Ubuntu build containers is 'nvidia'.
+4. the output files are placed in: /workspace/TensorRT/build/out/
+
+```shell
+sudo ls
+cd $TRT_OSSPATH
+mkdir -p build && cd build
+cmake .. -DTRT_LIB_DIR=$TRT_LIBPATH -DTRT_OUT_DIR=`pwd`/out -DCUDA_VERSION=12.6.0 -DGPU_ARCHS="75;86;89"
+make -j$(nproc)
+```
+
+---8<------8<------8<------8<------8<------8<------8<------8<------8<------8<------8<------8<------8<---
+
+
+
+
+
+
+---8<------8<------8<------8<------8<------8<------8<------8<------8<------8<------8<------8<------8<---
+
+
+
+
+
+
